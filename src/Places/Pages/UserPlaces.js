@@ -50,8 +50,8 @@ const DUMMY_PLACES = [
     address:
       "Empire State Building, Empire State Building, West 34th Street, New York, NY, USA",
     location: {
-      lat: 40.7484405,
-      lng: -73.9856644,
+      lat: 23.877401,
+      lng: 90.4119781,
     },
     creator: "u4",
   },
