@@ -20,7 +20,7 @@ function PlaceItem(props) {
       >
         <div className="map-container">
           <h2>
-            <Map center={props.coordinates} zoom={16} />
+            <Map center={props.coordinates} zoom={14} />
           </h2>
         </div>
       </Modal>

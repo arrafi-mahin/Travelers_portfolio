@@ -1,10 +1,3 @@
-// import React from "react";
-// import "./Map.css";
-// function Map(props) {
-//   return <div className={`map ${props.className}`} style={props.style}></div>;
-// }
-
-// export default Map;
 import React, { useRef, useEffect, useState } from "react";
 import maplibregl from "maplibre-gl";
 
@@ -25,7 +18,7 @@ const Map = (props) => {
       zoom: props.zoom,
     });
 
-    map.current.addControl(new maplibregl.NavigationControl(), "top-right");
+    // map.current.addControl(new maplibregl.NavigationControl(), "top-right");
     new maplibregl.Marker({ color: "#FF0000" })
       .setLngLat([props.center.lng, props.center.lat])
       .addTo(map.current);
