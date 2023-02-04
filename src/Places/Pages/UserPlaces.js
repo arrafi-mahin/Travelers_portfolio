@@ -40,7 +40,7 @@ const DUMMY_PLACES = [
       lat: 40.7484405,
       lng: -73.9856644,
     },
-    creator: "u3",
+    creator: "u2",
   },
   {
     id: "p4",

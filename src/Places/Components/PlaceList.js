@@ -9,7 +9,7 @@ function PlaceList(props) {
       <div className="place-list center">
         <Card className="empty-list">
           <h3>No Places fount. Maybe create one?</h3>
-          <Button>Share Place</Button>
+          <Button to="/places/new">Share Place</Button>
         </Card>
       </div>
     );
