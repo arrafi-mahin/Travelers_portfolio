@@ -78,6 +78,7 @@ const getPlaceByUserId = (req, res, next) => {
 };
 
 const createPlace = (req, res, next) => {
+  console.log(req.body);
   const { title, description, coordinates, address, creator } = req.body;
   console.log(req.body);
   const createdPlace = {
@@ -89,6 +90,7 @@ const createPlace = (req, res, next) => {
   };
 
   DUMMY_PLACES.push(createdPlace);
+  // res.send("responsed");
   res.status(201).json({ place: createdPlace });
 };
 
