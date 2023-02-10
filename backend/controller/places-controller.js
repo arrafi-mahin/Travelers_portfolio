@@ -1,6 +1,7 @@
 const HttpError = require("../Models/http-error");
 const { uuid } = require("uuidv4");
-const DUMMY_PLACES = [
+const { validationResult } = require("express-validator");
+let DUMMY_PLACES = [
   {
     id: "p1",
     title: "empire State Building",
@@ -25,7 +26,7 @@ const DUMMY_PLACES = [
       lat: 40.7484405,
       lng: -73.9856644,
     },
-    creator: "u1",
+    creator: "u2",
   },
   {
     id: "p3",
@@ -70,18 +71,22 @@ const getPlaceByUserId = (req, res, next) => {
   const place = DUMMY_PLACES.filter((p) => {
     return p.creator === userId;
   });
-  if (!place) {
+  if (place.length === 0) {
     return next(
-      new HttpError("Could not find a place for the provided id.", 404)
+      new HttpError("Could not find any place for the provided id.", 404)
     );
   }
   res.json({ place });
 };
 
 const createPlace = (req, res, next) => {
-  console.log(req.body);
+  const errors = validationResult(req);
+  console.log(errors);
+  if (!errors.isEmpty()) {
+    throw new HttpError("Invalid Input. Please input valid information", 422);
+  }
   const { title, description, coordinates, address, creator } = req.body;
-  console.log(req.body);
+
   const createdPlace = {
     id: uuid(),
     title,
@@ -97,26 +102,31 @@ const createPlace = (req, res, next) => {
 };
 
 const updatePlaceById = (req, res, next) => {
+  const errors = validationResult(req);
+  console.log(errors);
+  if (!errors.isEmpty()) {
+    throw new HttpError("Invalid Input. Please input valid information", 422);
+  }
   const { title, description } = req.body;
   const placeId = req.params.pid;
   const updatePlace = DUMMY_PLACES.find((p) => {
-    console.log(p + "id: " + placeId);
     if (p.id == placeId) {
       p.title = title;
       p.description = description;
       return p;
     }
-    // if (!updatePlace) {
-    //   throw new HttpError("Place id Could not find.", 404);
-    // }
   });
+  if (!updatePlace) {
+    throw new HttpError("Place id Could not find.", 404);
+  }
   res.status(201).json({ place: updatePlace });
 };
 
 const deletePlaceById = (req, res, next) => {
-  const userId = req.params.pid;
-  console.log(DUMMY_PLACES.indexOf(userId));
-  res.send("request accepted");
+  const placeId = req.params.pid;
+  DUMMY_PLACES = DUMMY_PLACES.filter((p) => p.id !== placeId);
+
+  res.status(200).json({ message: "Place deleted." });
 };
 
 exports.getPlaceById = getPlaceById;
