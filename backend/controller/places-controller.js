@@ -1,6 +1,8 @@
 const HttpError = require("../Models/http-error");
 const { uuid } = require("uuidv4");
 const { validationResult } = require("express-validator");
+const Place = require("../Models/place");
+
 let DUMMY_PLACES = [
   {
     id: "p1",
@@ -79,7 +81,7 @@ const getPlaceByUserId = (req, res, next) => {
   res.json({ place });
 };
 
-const createPlace = (req, res, next) => {
+const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
   console.log(errors);
   if (!errors.isEmpty()) {
@@ -87,16 +89,22 @@ const createPlace = (req, res, next) => {
   }
   const { title, description, coordinates, address, creator } = req.body;
 
-  const createdPlace = {
-    id: uuid(),
+  const createdPlace = new Place({
     title,
     description,
     location: coordinates,
     address,
+    image: "https://source.unsplash.com/random/300×300",
     creator,
-  };
+  });
 
-  DUMMY_PLACES.push(createdPlace);
+  try {
+    const result = await createdPlace.save();
+    res.json(result);
+  } catch (errors) {
+    const error = new HttpError("Creating Faild", 500);
+    return next(error);
+  }
   // res.send("responsed");
   res.status(201).json({ place: createdPlace });
 };
