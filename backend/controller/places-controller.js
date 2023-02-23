@@ -4,9 +4,11 @@ const { validationResult } = require("express-validator");
 const Place = require("../Models/Place");
 const User = require("../Models/User");
 const mongoose = require("mongoose");
+
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
   let place;
+
   try {
     place = await Place.findById(placeId);
   } catch (err) {
@@ -24,31 +26,32 @@ const getPlaceById = async (req, res, next) => {
 };
 const getPlaceByUserId = async (req, res, next) => {
   const userId = req.params.uid;
-  let place;
+  // let place;
+  let userWithPlaces;
   try {
-    place = await Place.find({ creator: userId }).exec();
-    console.log(place);
+    // place = await Place.find({ creator: userId }).exec();
+    userWithPlaces = await User.findById(userId).populate("places");
   } catch (err) {
     const error = new HttpError(
-      "Fetching places faild for the provided user id",
+      "Fetching places failed for the provided user id",
       500
     );
 
     return next(error);
   }
-  if (!place || place.length === 0) {
+  if (!userWithPlaces || userWithPlaces.length === 0) {
     return next(
       new HttpError("Could not find any place for the provided id.", 404)
     );
   }
   res.json({
-    places: place.map((p) => p.toObject({ getters: true })),
+    places: userWithPlaces.places.map((p) => p.toObject({ getters: true })),
   });
 };
 
 const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
-  // console.log(errors);
+
   if (!errors.isEmpty()) {
     return next(
       new HttpError("Invalid Input. Please input valid information", 422)
@@ -86,7 +89,6 @@ const createPlace = async (req, res, next) => {
     await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (errors) {
-    console.log(errors);
     const error = new HttpError("Creating Faild", 500);
     return next(error);
   }
@@ -129,7 +131,6 @@ const deletePlaceById = async (req, res, next) => {
   let place;
   try {
     place = await Place.findById(placeId).populate("creator");
-    console.log(place);
   } catch (err) {
     const errors = new HttpError("Something went wrong", 500);
 

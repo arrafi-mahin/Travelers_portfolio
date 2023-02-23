@@ -16,12 +16,18 @@ const getUserList = async (req, res, next) => {
   }
   res.json({ users: users.map((user) => user.toObject({ getters: true })) });
 };
-const getUserById = (req, res, next) => {
+const getUserById = async (req, res, next) => {
   const userId = req.params.uid;
-  const user = DUMMY_USERS.filter((p) => {
-    return p.id === userId;
-  });
-  res.json({ user });
+  let user;
+  try {
+    user = await User.findById(userId).exec();
+  } catch (err) {
+    const error = new HttpError(
+      "Something went wrong. please try after sometime",
+      500
+    );
+  }
+  res.json({ user: user.toObject({ getters: true }) });
 };
 
 const userSignUp = async (req, res, next) => {
