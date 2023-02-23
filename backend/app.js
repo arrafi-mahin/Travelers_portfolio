@@ -23,7 +23,7 @@ app.use((error, req, res, next) => {
 // app.use("/user", userRoutes);
 mongoose
   .connect(
-    "mongodb+srv://mahin:arrafimahin@cluster0.tikxfav.mongodb.net/?retryWrites=true&w=majority"
+    "mongodb+srv://mahin:arrafimahin@cluster0.tikxfav.mongodb.net/Place?retryWrites=true&w=majority"
   )
   .then(() => {
     console.log("database connected");
