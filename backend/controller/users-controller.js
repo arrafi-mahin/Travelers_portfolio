@@ -1,5 +1,6 @@
 const { uuid } = require("uuidv4");
 const { validationResult } = require("express-validator");
+const User = require("../Models/User");
 const HttpError = require("../Models/http-error");
 
 const DUMMY_USERS = [
@@ -29,16 +30,18 @@ const DUMMY_USERS = [
   },
 ];
 
-const getUserList = (req, res, next) => {
-  const userInfo = DUMMY_USERS.map((u) => {
-    let info = {
-      id: u.id,
-      name: u.name,
-      email: u.email,
-    };
-    return info;
-  });
-  res.status(200).json(userInfo);
+const getUserList = async (req, res, next) => {
+  let users;
+  try {
+    users = await User.find({}, "-password");
+  } catch (err) {
+    const errors = new HttpError(
+      "Something went wrong. please try after sometime",
+      500
+    );
+    return next(errors);
+  }
+  res.json({ users: users.map((user) => user.toObject({ getters: true })) });
 };
 const getUserById = (req, res, next) => {
   const userId = req.params.uid;
@@ -48,34 +51,64 @@ const getUserById = (req, res, next) => {
   res.json({ user });
 };
 
-const userSignUp = (req, res, next) => {
+const userSignUp = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    throw new HttpError("Invalid input.", 422);
+    return next(new HttpError("Invalid input.", 422));
   }
   const { name, email, password } = req.body;
-  const hasUser = DUMMY_USERS.find((u) => u.email === email);
-  if (hasUser) {
-    throw new HttpError("Email address already registered");
+  let existingUser;
+  try {
+    existingUser = await User.findOne({ email: email });
+  } catch (err) {
+    const errors = new HttpError("email and password do not match", 500);
+    return next(errors);
   }
-  const newUser = {
-    id: uuid(),
-    name: name,
-    email: email.toLowerCase(),
-    password: password,
-  };
-  DUMMY_USERS.push(newUser);
-  res.json(`${name} Signup is successful.`);
+  if (existingUser) {
+    const error = new HttpError(
+      "User exists already, please login instead.",
+      200
+    );
+    return next(error);
+  } else {
+  }
+  const createUser = new User({
+    name,
+    email,
+    image: "https://source.unsplash.com/random/300×300",
+    password,
+    places: [],
+  });
+
+  try {
+    await createUser.save();
+  } catch (err) {
+    const errors = new HttpError("Signing up is faild.", 500);
+    return next(errors);
+  }
+
+  res.status(201).json({ user: createUser.toObject({ getters: true }) });
 };
-const userLogin = (req, res, next) => {
+const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
-  const user = DUMMY_USERS.find((u) => u.email === email);
-  console.log(user);
-  if (!user || user.password !== password) {
-    throw new HttpError("email and password do not match", 404);
+  let user;
+  try {
+    user = await User.findOne({ email: email });
+  } catch (err) {
+    const errors = new HttpError("Login failed", 500);
+    return next(errors);
   }
+  if (!user || user.password !== password) {
+    const errors = new HttpError(
+      "Login failed. Email and password not Match",
+      401
+    );
+    return next(errors);
+  }
+
   res.json(`${user.name} Welcome Back`);
 };
 exports.getUserList = getUserList;
 exports.userSignUp = userSignUp;
 exports.userLogin = userLogin;
+exports.getUserById = getUserById;

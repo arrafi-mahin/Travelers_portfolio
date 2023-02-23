@@ -2,7 +2,8 @@ const HttpError = require("../Models/http-error");
 const { uuid } = require("uuidv4");
 const { validationResult } = require("express-validator");
 const Place = require("../Models/Place");
-
+const User = require("../Models/User");
+const mongoose = require("mongoose");
 const getPlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
   let place;
@@ -49,7 +50,9 @@ const createPlace = async (req, res, next) => {
   const errors = validationResult(req);
   // console.log(errors);
   if (!errors.isEmpty()) {
-    throw new HttpError("Invalid Input. Please input valid information", 422);
+    return next(
+      new HttpError("Invalid Input. Please input valid information", 422)
+    );
   }
   const { title, description, coordinates, address, creator } = req.body;
 
@@ -61,11 +64,29 @@ const createPlace = async (req, res, next) => {
     image: "https://source.unsplash.com/random/300×300",
     creator,
   });
-  try {
-    const result = await createdPlace.save();
+  let user;
 
-    res.json(result);
-    return;
+  try {
+    user = await User.findById(creator);
+  } catch (errors) {
+    const error = new HttpError("Creating place failed, please try again", 500);
+    return next(error);
+  }
+
+  console.log(user);
+  if (!user) {
+    const error = new HttpError("we could not find user for provided id", 500);
+  }
+
+  try {
+    const sess = await mongoose.startSession();
+    sess.startTransaction();
+    await createdPlace.save({ session: sess });
+    user.places.push(createdPlace);
+    await user.save({ session: sess });
+    await sess.commitTransaction();
+
+    return res.json();
   } catch (errors) {
     const error = new HttpError("Creating Faild", 500);
     return next(error);
@@ -78,7 +99,9 @@ const updatePlaceById = async (req, res, next) => {
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    throw new HttpError("Invalid Input. Please input valid information", 422);
+    return next(
+      new HttpError("Invalid Input. Please input valid information", 422)
+    );
   }
   const { title, description } = req.body;
   const placeId = req.params.pid;
