@@ -9,10 +9,14 @@ import {
 import { useForm } from "../../Shared/hooks/form-hook";
 import { AuthContext } from "../../Shared/Context/Auth-context";
 import Card from "../../Shared/Components/UIElements/Card";
+import ErrorModal from "../../Shared/Components/UIElements/ErrorModal";
+import Loading from "../../Shared/Components/UIElements/LoadingSpinner";
 import "./Auth.css";
 
 function Auth(props) {
   const [isLogin, setIsLogin] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState();
   const auth = useContext(AuthContext);
   const [formState, inputHandler, setFormData] = useForm(
     {
@@ -28,10 +32,38 @@ function Auth(props) {
     false
   );
 
-  const authSubmitHandler = (event) => {
+  const authSubmitHandler = async (event) => {
     event.preventDefault();
+    if (isLogin) {
+    } else {
+      try {
+        setIsLoading(true);
 
-    auth.login();
+        const response = await fetch("http://localhost:5000/api/users/signup", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formState.inputs.name.value,
+            email: formState.inputs.email.value,
+            password: formState.inputs.password.value,
+          }),
+        });
+        const responseData = await response.json();
+        console.log(response.ok);
+        if (!response.ok) {
+          throw new Error(responseData.message);
+        }
+        console.log(responseData);
+        setIsLoading(false);
+        auth.login();
+      } catch (err) {
+        console.log(err);
+        setError(err.message || "Somthing went wrong. please try again.");
+        setIsLoading(false);
+      }
+    }
   };
   const switchModelHandler = () => {
     if (!isLogin) {
@@ -59,6 +91,8 @@ function Auth(props) {
   };
   return (
     <Card className="authentication">
+      {isLoading && <Loading asOverlay />}
+      {}
       <h2>{isLogin ? "Login" : "Sign Up"} Required.</h2>
       <hr />
       <form onSubmit={authSubmitHandler}>
