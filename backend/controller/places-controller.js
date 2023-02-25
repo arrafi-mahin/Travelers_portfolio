@@ -89,7 +89,6 @@ const createPlace = async (req, res, next) => {
     await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (errors) {
-    console.log(errors);
     const error = new HttpError("Creating Faild", 500);
     return next(error);
   }
@@ -129,11 +128,12 @@ const updatePlaceById = async (req, res, next) => {
 
 const deletePlaceById = async (req, res, next) => {
   const placeId = req.params.pid;
+
   let place;
   try {
     place = await Place.findById(placeId).populate("creator");
   } catch (err) {
-    const errors = new HttpError("Something went wrong", 500);
+    const errors = new HttpError("Something went wrong here", 500);
 
     return next(errors);
   }

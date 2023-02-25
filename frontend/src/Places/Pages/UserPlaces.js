@@ -19,7 +19,11 @@ function UserPlaces(props) {
     };
     fetchPlaces();
   }, [sendRequest, userId]);
-  // const loadedPlaces = DUMMY_PLACES.filter((place) => place.creator === userId);
+  const placeDeleteHandler = (deletedPlace) => {
+    setLoadedPlaces((prevPlaces) =>
+      prevPlaces.filter((place) => place.id !== deletedPlace)
+    );
+  };
   return (
     <Fragment>
       {error && <ErrorModal error={error} onClear={clearError} />}
@@ -28,7 +32,9 @@ function UserPlaces(props) {
           <LoadingSpinner />
         </div>
       )}
-      {!isLoading && loadedPlaces && <PlaceList items={loadedPlaces} />}
+      {!isLoading && loadedPlaces && (
+        <PlaceList items={loadedPlaces} onDeletePlace={placeDeleteHandler} />
+      )}
     </Fragment>
   );
 }

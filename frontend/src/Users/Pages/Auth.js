@@ -130,8 +130,8 @@ function Auth(props) {
             placeHolder="Password"
             type="password"
             label="Password"
-            validators={[VALIDATOR_MINLENGTH(5)]}
-            errorText="Please Input a valid Password at least 5 charecter."
+            validators={[VALIDATOR_MINLENGTH(6)]}
+            errorText="Please Input a valid Password at least 6 charecter."
             onInput={inputHandler}
           />
           <Button type="submit" disabled={!formState.isValid}>
