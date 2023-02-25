@@ -89,6 +89,7 @@ const createPlace = async (req, res, next) => {
     await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (errors) {
+    console.log(errors);
     const error = new HttpError("Creating Faild", 500);
     return next(error);
   }

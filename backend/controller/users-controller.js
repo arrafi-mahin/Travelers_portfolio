@@ -46,18 +46,18 @@ const userSignUp = async (req, res, next) => {
   if (existingUser) {
     const error = new HttpError(
       "User exists already, please login instead.",
-      400
+      422
     );
     return next(error);
   } else {
+    const createUser = new User({
+      name,
+      email,
+      image: "https://source.unsplash.com/random/300×300",
+      password,
+      places: [],
+    });
   }
-  const createUser = new User({
-    name,
-    email,
-    image: "https://source.unsplash.com/random/300×300",
-    password,
-    places: [],
-  });
 
   try {
     await createUser.save();
@@ -66,7 +66,7 @@ const userSignUp = async (req, res, next) => {
     return next(errors);
   }
 
-  res.status(201).json({ user: createUser.toObject({ getters: true }) });
+  res.json({ user: createUser.toObject({ getters: true }) });
 };
 const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
@@ -85,7 +85,10 @@ const userLogin = async (req, res, next) => {
     return next(errors);
   }
 
-  res.json(`${user.name} Welcome Back`);
+  res.json({
+    message: `${user.name} Welcome Back`,
+    user: user.toObject({ getters: true }),
+  });
 };
 exports.getUserList = getUserList;
 exports.userSignUp = userSignUp;
