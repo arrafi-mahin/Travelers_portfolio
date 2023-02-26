@@ -1,4 +1,3 @@
-const { uuid } = require("uuidv4");
 const { validationResult } = require("express-validator");
 const User = require("../Models/User");
 const HttpError = require("../Models/http-error");
@@ -53,20 +52,20 @@ const userSignUp = async (req, res, next) => {
     const createUser = new User({
       name,
       email,
-      image: "https://source.unsplash.com/random/300×300",
+      image: req.file.path,
       password,
       places: [],
     });
-  }
+    try {
+      await createUser.save();
+    } catch (err) {
+      console.log(err);
+      const errors = new HttpError("Signing up is failed.", 500);
+      return next(errors);
+    }
 
-  try {
-    await createUser.save();
-  } catch (err) {
-    const errors = new HttpError("Signing up is faild.", 500);
-    return next(errors);
+    res.json({ user: createUser.toObject({ getters: true }) });
   }
-
-  res.json({ user: createUser.toObject({ getters: true }) });
 };
 const userLogin = async (req, res, next) => {
   const { email, password } = req.body;
