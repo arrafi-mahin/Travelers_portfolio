@@ -1,3 +1,4 @@
+const fs = require("fs");
 const HttpError = require("../Models/http-error");
 const { uuid } = require("uuidv4");
 const { validationResult } = require("express-validator");
@@ -57,14 +58,18 @@ const createPlace = async (req, res, next) => {
       new HttpError("Invalid Input. Please input valid information", 422)
     );
   }
-  const { title, description, coordinates, address, creator } = req.body;
+  const { title, description, address, creator } = req.body;
 
   const createdPlace = new Place({
     title,
     description,
-    location: coordinates,
+    location: {
+      //should be coordinates
+      lat: 0,
+      lng: 0,
+    },
     address,
-    image: "https://source.unsplash.com/random/300×300",
+    image: req.file.path,
     creator,
   });
   let user;
@@ -137,7 +142,7 @@ const deletePlaceById = async (req, res, next) => {
 
     return next(errors);
   }
-
+  const imagePath = place.image;
   if (!place) {
     const error = new HttpError("Place not found", 404);
     return next(error);
@@ -153,6 +158,7 @@ const deletePlaceById = async (req, res, next) => {
   } catch (err) {
     const errors = new HttpError("Deleting failed 2", 500);
   }
+  fs.unlink(imagePath, (err) => console.log(err));
   res.status(200).json({ message: "Place deleted." });
 };
 

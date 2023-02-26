@@ -1,6 +1,7 @@
 import React, { Fragment, useContext } from "react";
 import Input from "../../Shared/Components/FormElements/Input";
 import Button from "../../Shared/Components/FormElements/Button";
+import ImageUpload from "../../Shared/Components/FormElements/ImageUpload";
 import {
   VALIDATOR_REQUIRE,
   VALIDATOR_MINLENGTH,
@@ -30,6 +31,10 @@ function NewPlace(props) {
         value: "",
         isValid: false,
       },
+      image: {
+        value: null,
+        isValid: false,
+      },
     },
     false
   );
@@ -37,21 +42,13 @@ function NewPlace(props) {
   const placeSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      await sendRequest(
-        "http://localhost:5000/api/places/",
-        "POST",
-        JSON.stringify({
-          title: formState.inputs.title.value,
-          description: formState.inputs.description.value,
-          address: formState.inputs.address.value,
-          creator: auth.userId,
-          coordinates: {
-            lat: 0,
-            lng: 0,
-          },
-        }),
-        { "Content-Type": "application/json" }
-      );
+      const formData = new FormData();
+      formData.append("title", formState.inputs.title.value);
+      formData.append("description", formState.inputs.description.value);
+      formData.append("address", formState.inputs.address.value);
+      formData.append("image", formState.inputs.image.value);
+      formData.append("creator", auth.userId);
+      await sendRequest("http://localhost:5000/api/places/", "POST", formData);
       //Redirect user to different page
       navigate("/");
     } catch (err) {}
@@ -85,6 +82,11 @@ function NewPlace(props) {
           validators={[VALIDATOR_REQUIRE()]}
           errorText="Please Enter a valid Address."
           onInput={inputHandler}
+        />
+        <ImageUpload
+          id="image"
+          onInput={inputHandler}
+          errorText="Please Provide an image."
         />
         <Button type="submit" disabled={!formState.isValid}>
           ADD PLACE
