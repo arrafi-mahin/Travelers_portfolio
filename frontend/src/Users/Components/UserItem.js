@@ -6,7 +6,7 @@ import "./UserItem.css";
 function UserItem(props) {
   return (
     <li className="user-item">
-      <Card>
+      <Card className="user-card">
         <Link to={`/${props.id}/places`}>
           <div className="user-item__image">
             <Avatar

@@ -8,6 +8,7 @@ import UpdatePlace from "./Places/Pages/UpdatePlace";
 import Auth from "./Users/Pages/Auth";
 import { AuthContext } from "./Shared/Context/Auth-context";
 import { useAuth } from "./Shared/hooks/auth-hook";
+import "./App.css";
 function App() {
   const { userId, token, login, logout } = useAuth();
   let routes;
@@ -44,16 +45,10 @@ function App() {
     >
       <Router>
         <MainNavigation />
-        <main>
-          <Routes>
-            {routes}
-            {/* <Route path="/" element={<Users />} />
-            <Route path="/:userId/places" element={<UserPlaces />} />
-            <Route path="/places/new" element={<NewPlace />} />
-            <Route path="/places/:placeId" element={<UpdatePlace />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="*" element={<Users />} /> */}
-          </Routes>
+        <main className="main">
+          <div className="blur">
+            <Routes>{routes}</Routes>
+          </div>
         </main>
       </Router>
     </AuthContext.Provider>

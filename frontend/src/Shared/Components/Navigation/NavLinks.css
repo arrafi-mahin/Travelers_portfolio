@@ -15,27 +15,57 @@
 }
 
 .nav-links a {
-  border: 1px solid transparent;
-  color: #292929;
+  background-color: #29292925;
   text-decoration: none;
-  padding: 0.5rem;
+  padding: 10px 15px;
+  border-radius: 30px;
+  margin: 0 5px;
+  backdrop-filter: blur(10px);
+  color: white;
 }
 
-.nav-links a:hover,
-.nav-links a:active,
 .nav-links a.active {
-  background: #f8df00;
-  border-color: #292929;
-  color: #292929;
+  background-image: linear-gradient(
+    to right,
+    #314755 0%,
+    #15b3b86e 51%,
+    #314755 100%
+  );
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.7s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 30px;
+  display: block;
 }
-
+.nav-links a:hover {
+  background-image: linear-gradient(
+    to right,
+    #314755 0%,
+    #15b2b8 51%,
+    #314755 100%
+  );
+  text-align: center;
+  text-transform: uppercase;
+  transition: 0.7s;
+  background-size: 200% auto;
+  color: white;
+  border-radius: 30px;
+  display: block;
+  background-position: right center;
+  color: #fff;
+  text-decoration: none;
+}
 .nav-links button {
   cursor: pointer;
-  border: 1px solid #292929;
-  color: #292929;
-  background: transparent;
-  padding: 0.5rem;
-  font: inherit;
+  background-color: #0f7aa542;
+  text-decoration: none;
+  padding: 10px 15px;
+  border-radius: 30px;
+  border: 0px;
+  margin: 0 5px;
+  /* backdrop-filter: blur(10px); */
 }
 
 .nav-links button:focus {
@@ -58,19 +88,19 @@
   }
 
   .nav-links a {
-    color: white;
+    color: white !important;
     text-decoration: none;
   }
 
   .nav-links button {
-    border: 1px solid white;
+    /* border: 1px solid white; */
     color: white;
-    background: transparent;
+    /* background: transparent; */
   }
 
   .nav-links button:hover,
   .nav-links button:active {
-    background: #f8df00;
-    color: #292929;
+    background: #0f7aa594;
+    /* color: #292929; */
   }
 }

@@ -1,6 +1,10 @@
+.user-card {
+  padding: 0 !important;
+  width: 20rem;
+}
 .user-item {
   margin: 1rem;
-  width: calc(45% - 2rem);
+  /* width: calc(45% - 2rem); */
   min-width: 17.5rem;
 }
 
@@ -10,14 +14,15 @@
   width: 100%;
   height: 100%;
   text-decoration: none;
-  padding: 1rem;
+  padding: 2rem;
   color: white;
-  background: #292929;
+  background: #15b2b842;
 }
 
-.user-item a:hover,
-.user-item a:active {
-  background: #ffd900;
+.user-item a:hover {
+  background: #15b3b87c;
+  transition: 0.4s;
+  color: white !important;
 }
 
 .user-item__content {
@@ -25,8 +30,8 @@
 }
 
 .user-item__image {
-  width: 4rem;
-  height: 4rem;
+  width: 5rem;
+  height: 5rem;
   margin-right: 1rem;
 }
 
@@ -34,14 +39,7 @@
   font-size: 1.5rem;
   margin: 0 0 0.5rem 0;
   font-weight: normal;
-  color: #ffd900;
-}
-
-.user-item:hover h2,
-.user-item:active h2,
-.user-item:hover h3,
-.user-item:active h3 {
-  color: #292929;
+  color: #ffff00;
 }
 
 .user-item__info h3 {

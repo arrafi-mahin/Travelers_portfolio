@@ -32,7 +32,7 @@ function MainNavigation(props) {
         </button>
         <Link to="/" className="main-navigation__title">
           {" "}
-          <h1>Your Places</h1>
+          <h1>Travelers Hub</h1>
         </Link>
 
         <nav className="main-navigation__header-nav">
