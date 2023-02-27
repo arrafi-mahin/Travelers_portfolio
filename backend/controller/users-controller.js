@@ -1,4 +1,7 @@
 const { validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+
 const User = require("../Models/User");
 const HttpError = require("../Models/http-error");
 
@@ -49,11 +52,22 @@ const userSignUp = async (req, res, next) => {
     );
     return next(error);
   } else {
+    let hashedPassword;
+    try {
+      hashedPassword = await bcrypt.hash(password, 12);
+    } catch (err) {
+      console.log(err);
+      const error = new HttpError(
+        "Could not create user, please try again.",
+        500
+      );
+      return next(error);
+    }
     const createUser = new User({
       name,
       email,
       image: req.file.path,
-      password,
+      password: hashedPassword,
       places: [],
     });
     try {
@@ -64,7 +78,21 @@ const userSignUp = async (req, res, next) => {
       return next(errors);
     }
 
-    res.json({ user: createUser.toObject({ getters: true }) });
+    let token;
+    try {
+      token = jwt.sign(
+        { userId: createUser.id, email: createUser.email },
+        "supersecret_dont_share",
+        { expiresIn: "1h" }
+      );
+    } catch (err) {
+      const errors = new HttpError("Signing up is failed.", 500);
+      return next(errors);
+    }
+
+    res
+      .status(201)
+      .json({ userId: createUser.id, email: createUser.email, token: token });
   }
 };
 const userLogin = async (req, res, next) => {
@@ -76,17 +104,49 @@ const userLogin = async (req, res, next) => {
     const errors = new HttpError("Login failed", 500);
     return next(errors);
   }
-  if (!user || user.password !== password) {
+  if (!user) {
     const errors = new HttpError(
       "Login failed. Email and password not Match",
-      401
+      403
+    );
+    return next(errors);
+  }
+  let isValidPassword = false;
+  try {
+    isValidPassword = await bcrypt.compare(password, user.password);
+  } catch (err) {
+    const error = new HttpError(
+      "Could not logged in, Please check your credentials and try again",
+      500
+    );
+    return next(error);
+  }
+  if (!isValidPassword) {
+    const errors = new HttpError(
+      "Login failed. Email and password not Match",
+      403
+    );
+    return next(errors);
+  }
+  let token;
+  try {
+    token = jwt.sign(
+      { userId: user.id, email: user.email },
+      "supersecret_dont_share",
+      { expiresIn: "1h" }
+    );
+  } catch (err) {
+    const errors = new HttpError(
+      "Login is failed. please try again later",
+      500
     );
     return next(errors);
   }
 
   res.json({
-    message: `${user.name} Welcome Back`,
-    user: user.toObject({ getters: true }),
+    userId: user.id,
+    email: user.email,
+    token: token,
   });
 };
 exports.getUserList = getUserList;

@@ -58,7 +58,7 @@ const createPlace = async (req, res, next) => {
       new HttpError("Invalid Input. Please input valid information", 422)
     );
   }
-  const { title, description, address, creator } = req.body;
+  const { title, description, address } = req.body;
 
   const createdPlace = new Place({
     title,
@@ -70,12 +70,12 @@ const createPlace = async (req, res, next) => {
     },
     address,
     image: req.file.path,
-    creator,
+    creator: req.userData.userId,
   });
   let user;
 
   try {
-    user = await User.findById(creator);
+    user = await User.findById(req.userData.userId);
   } catch (errors) {
     const error = new HttpError("Creating place failed, please try again", 500);
     return next(error);
@@ -119,6 +119,13 @@ const updatePlaceById = async (req, res, next) => {
     const error = new HttpError("Updating Faild", 500);
     return next(error);
   }
+  if (place.creator.toString() !== req.userData.userId) {
+    const error = new HttpError(
+      "You are not allowed to update this place",
+      401
+    );
+    return next(error);
+  }
   place.title = title;
   place.description = description;
 
@@ -141,6 +148,13 @@ const deletePlaceById = async (req, res, next) => {
     const errors = new HttpError("Something went wrong here", 500);
 
     return next(errors);
+  }
+  if (place.creator.id !== req.userData.userId) {
+    const error = new HttpError(
+      "You are not allowed to delete this place",
+      401
+    );
+    return next(error);
   }
   const imagePath = place.image;
   if (!place) {
