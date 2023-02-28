@@ -68,7 +68,7 @@ function PlaceItem(props) {
           </Fragment>
         }
       >
-        <p>
+        <p className="modal-text">
           Do you want to proceed and delete this place? Please note that it
           can't be undone thereafter.
         </p>

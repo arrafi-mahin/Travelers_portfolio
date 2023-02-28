@@ -26,7 +26,6 @@ function ModalOverLay(props) {
     </div>
   );
   return createPortal(content, document.getElementById("modal-hook"));
-  //   return ReactDOM.createPortal(content, document.getElementById("modal-hook"));
 }
 
 function Modal(props) {
