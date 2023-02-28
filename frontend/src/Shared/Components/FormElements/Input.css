@@ -17,9 +17,10 @@
 .form-control textarea {
   width: 100%;
   font: inherit;
-  border: 1px solid #01abb894;
+  border: 1px solid #ffffff94;
   background: transparent;
   padding: 0.15rem 0.25rem;
+  color: white;
 }
 
 .form-control input:focus,

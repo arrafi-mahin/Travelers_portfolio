@@ -46,10 +46,11 @@ function App() {
       <Router>
         <MainNavigation />
         <main className="main">
-          <div className="blur">
-            <Routes>{routes}</Routes>
-          </div>
+          <div className="blur"></div>
         </main>
+        <div className="content">
+          <Routes>{routes}</Routes>
+        </div>
       </Router>
     </AuthContext.Provider>
   );

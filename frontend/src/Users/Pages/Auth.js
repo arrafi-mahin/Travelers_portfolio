@@ -144,14 +144,14 @@ function Auth(props) {
               center
               id="image"
               onInput={inputHandler}
-              errorText="Please Provide an image."
+              // errorText="Please Provide an image."
             />
           )}
           <Button type="submit" disabled={!formState.isValid}>
             {isLogin ? "LOGIN" : "SIGNUP"}
           </Button>
         </form>
-        <Button inverse onClick={switchModelHandler}>
+        <Button onClick={switchModelHandler}>
           SWITCH TO {isLogin ? "SIGNUP" : "LOGIN"}
         </Button>
       </Card>

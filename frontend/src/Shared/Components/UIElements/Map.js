@@ -3,7 +3,7 @@ import maplibregl from "maplibre-gl";
 
 import "./Map.css";
 
-const Map = (props) => {
+const MapLayer = (props) => {
   const mapContainer = useRef(null);
   const map = useRef(null);
 
@@ -23,6 +23,7 @@ const Map = (props) => {
       .setLngLat([props.center.lng, props.center.lat])
       .addTo(map.current);
   });
+
   return (
     <div className="map-wrap">
       <div ref={mapContainer} className="map" />
@@ -30,4 +31,4 @@ const Map = (props) => {
   );
 };
 
-export default Map;
+export default MapLayer;

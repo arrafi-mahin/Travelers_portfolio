@@ -64,7 +64,6 @@ const createPlace = async (req, res, next) => {
     title,
     description,
     location: {
-      //should be coordinates
       lat: 0,
       lng: 0,
     },

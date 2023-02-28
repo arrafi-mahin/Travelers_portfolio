@@ -1,12 +1,14 @@
 .main {
   background-color: aqua;
   position: absolute;
-  height: 100vh;
+  /* min-height: 100vh; */
+  height: 100%;
   width: 100%;
   margin: 0;
   background-image: url(./Assets/Image/background.jpg);
   background-size: cover;
   background-repeat: no-repeat;
+  position: fixed;
 }
 
 .blur {
@@ -16,5 +18,8 @@
   width: 100%;
   position: absolute;
   top: 0;
+  padding-top: 80px;
+}
+.content {
   padding-top: 80px;
 }

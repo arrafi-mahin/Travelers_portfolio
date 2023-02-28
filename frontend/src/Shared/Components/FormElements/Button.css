@@ -1,9 +1,9 @@
 .button {
   font: inherit;
   padding: 0.5rem 1.5rem;
-  border: 1px solid #ff0055;
+  border: 1px solid white;
   border-radius: 4px;
-  background: #ff0055;
+  background: transparent;
   color: white;
   cursor: pointer;
   margin-right: 1rem;
@@ -46,7 +46,7 @@
 .button:disabled,
 .button:hover:disabled,
 .button:active:disabled {
-  background: #ccc;
+  background: transparent;
   color: #979797;
   border-color: #ccc;
   cursor: not-allowed;
