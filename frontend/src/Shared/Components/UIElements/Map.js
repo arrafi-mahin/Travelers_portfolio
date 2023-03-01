@@ -1,33 +1,23 @@
 import React, { useRef, useEffect, useState } from "react";
-import maplibregl from "maplibre-gl";
-
+import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
 import "./Map.css";
 
 const MapLayer = (props) => {
-  const mapContainer = useRef(null);
-  const map = useRef(null);
-
-  const [API_KEY] = useState("a5wpZOSMqDjVVWcFXrYv");
-
-  useEffect(() => {
-    if (map.current) return; //stops map from intializing more than once
-    map.current = new maplibregl.Map({
-      container: mapContainer.current,
-      style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${API_KEY}`,
-      center: [props.center.lng, props.center.lat],
-      zoom: props.zoom,
-    });
-
-    // map.current.addControl(new maplibregl.NavigationControl(), "top-right");
-    new maplibregl.Marker({ color: "#FF0000" })
-      .setLngLat([props.center.lng, props.center.lat])
-      .addTo(map.current);
-  });
-
   return (
-    <div className="map-wrap">
-      <div ref={mapContainer} className="map" />
-    </div>
+    <MapContainer
+      center={props.center}
+      zoom={16}
+      scrollWheelZoom={true}
+      style={{ height: "100%" }}
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+      />
+      <Marker position={props.center}>
+        <Popup>{props.name}</Popup>
+      </Marker>
+    </MapContainer>
   );
 };
 
