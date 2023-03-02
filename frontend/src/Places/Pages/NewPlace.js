@@ -41,7 +41,14 @@ function NewPlace(props) {
   const navigate = useNavigate();
   const placeSubmitHandler = async (e) => {
     e.preventDefault();
-
+    try {
+      const response = await sendRequest(
+        `http://api.positionstack.com/v1/forward?access_key=1a17c515a4671acc58e016dccc38a187&query=${formState.inputs.address.value}`
+      );
+      console.log(response);
+    } catch (err) {
+      console.log(err);
+    }
     try {
       const formData = new FormData();
       formData.append("title", formState.inputs.title.value);
