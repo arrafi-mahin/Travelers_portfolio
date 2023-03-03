@@ -42,21 +42,13 @@ function NewPlace(props) {
   const placeSubmitHandler = async (e) => {
     e.preventDefault();
     try {
-      const response = await sendRequest(
-        `http://api.positionstack.com/v1/forward?access_key=1a17c515a4671acc58e016dccc38a187&query=${formState.inputs.address.value}`
-      );
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-    }
-    try {
       const formData = new FormData();
       formData.append("title", formState.inputs.title.value);
       formData.append("description", formState.inputs.description.value);
       formData.append("address", formState.inputs.address.value);
       formData.append("image", formState.inputs.image.value);
       // formData.append("location", location);
-      await sendRequest("http://localhost:5000/api/places/", "POST", formData, {
+      await sendRequest(process.env.REACT_APP_BACKEND_URL +"/places/", "POST", formData, {
         authorization: "Bearer " + auth.token,
       });
       //Redirect user to different page

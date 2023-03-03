@@ -1,0 +1,10 @@
+{
+    "env":{
+        "DB_USER": "mahin",
+        "DB_PASSWORD": "arrafimahin",
+        "DB_NAME": "mern",
+        "LOCATION_KEY": "1a17c515a4671acc58e016dccc38a187",
+        "JWT_KEY": ""
+
+    }
+}
