@@ -10,7 +10,7 @@ function UserItem(props) {
         <Link to={`/${props.id}/places`}>
           <div className="user-item__image">
             <Avatar
-              image={process.env.REACT_APP_BACKEND_URL +`/${props.image}`}
+              image={process.env.REACT_APP_IMAGE_URL +`/${props.image}`}
               alt={props.name}
             />
           </div>

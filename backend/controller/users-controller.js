@@ -63,6 +63,7 @@ const userSignUp = async (req, res, next) => {
       );
       return next(error);
     }
+    console.log(req.file.path);
     const createUser = new User({
       name,
       email,

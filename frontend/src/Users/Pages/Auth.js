@@ -50,7 +50,7 @@ function Auth(props) {
           }
         );
         auth.login(responseData.userId, responseData.token);
-      } catch (err) {}
+      } catch (err) {console.log(err)}
     } else {
       try {
         const formData = new FormData();
