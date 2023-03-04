@@ -7,6 +7,7 @@ const placesRoutes = require("./routes/places-routes");
 const userRoutes = require("./routes/users-routes");
 const httpError = require("./Models/http-error");
 const app = express();
+require('dotenv').config()
 app.use(bodyParser.json());
 app.use("/uploads/images", express.static(path.join("uploads", "images")));
 
