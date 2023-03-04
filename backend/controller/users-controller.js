@@ -56,14 +56,14 @@ const userSignUp = async (req, res, next) => {
     try {
       hashedPassword = await bcrypt.hash(password, 12);
     } catch (err) {
-      console.log(err);
+
       const error = new HttpError(
         "Could not create user, please try again.",
         500
       );
       return next(error);
     }
-    console.log(req.file.path);
+    
     const createUser = new User({
       name,
       email,
@@ -74,7 +74,7 @@ const userSignUp = async (req, res, next) => {
     try {
       await createUser.save();
     } catch (err) {
-      console.log(err);
+      
       const errors = new HttpError("Signing up is failed.", 500);
       return next(errors);
     }

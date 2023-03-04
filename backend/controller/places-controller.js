@@ -60,7 +60,7 @@ const createPlace = async (req, res, next) => {
   }
   const { title, description, address } = req.body;
   const coords = await placeCoords(address).then(res => {return res});
-  console.log(coords);
+
   const createdPlace = new Place({
     title,
     description,
@@ -94,7 +94,7 @@ const createPlace = async (req, res, next) => {
     await user.save({ session: sess });
     await sess.commitTransaction();
   } catch (errors) {
-    console.log(errors);
+   
     const error = new HttpError("Creating Faild", 500);
     return next(error);
   }

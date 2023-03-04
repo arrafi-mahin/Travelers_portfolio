@@ -14,7 +14,9 @@ const Users = (props) => {
         );
 
         setLoadedUser(responseData.users);
-      } catch (err) {}
+      } catch (err) {
+        console.log(err);
+      }
     };
     fetchUsers();
   }, [sendRequest]);

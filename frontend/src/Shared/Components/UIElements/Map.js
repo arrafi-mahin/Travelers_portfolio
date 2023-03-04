@@ -1,12 +1,12 @@
-import React, { useRef, useEffect, useState } from "react";
-import { MapContainer, TileLayer, useMap, Marker, Popup } from "react-leaflet";
+import React from "react";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "./Map.css";
 
 const MapLayer = (props) => {
   return (
     <MapContainer
       center={props.center}
-      zoom={16}
+      zoom={props.zoom}
       scrollWheelZoom={true}
       style={{ height: "100%" }}
     >
