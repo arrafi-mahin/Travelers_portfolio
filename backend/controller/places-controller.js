@@ -1,8 +1,7 @@
 const fs = require("fs");
 const HttpError = require("../Models/http-error");
-const { uuid } = require("uuidv4");
 const { validationResult } = require("express-validator");
-const Place = require("../Models/Place");
+const Place = require("../Models/place");
 const User = require("../Models/User");
 const mongoose = require("mongoose");
 const placeCoords = require('../Util/location')
